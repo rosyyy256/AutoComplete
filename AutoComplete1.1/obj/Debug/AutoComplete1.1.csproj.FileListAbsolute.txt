@@ -1,0 +1,7 @@
+D:\local projects\Контур.Тестовое\AutoComplete1.1\AutoComplete1.1\obj\Debug\AutoComplete1.1.csproj.AssemblyReference.cache
+D:\local projects\Контур.Тестовое\AutoComplete1.1\AutoComplete1.1\obj\Debug\AutoComplete1.1.csproj.SuggestedBindingRedirects.cache
+D:\local projects\Контур.Тестовое\AutoComplete1.1\AutoComplete1.1\obj\Debug\AutoComplete1.1.csproj.CoreCompileInputs.cache
+D:\local projects\Контур.Тестовое\AutoComplete1.1\AutoComplete1.1\bin\Debug\AutoComplete1._1.exe
+D:\local projects\Контур.Тестовое\AutoComplete1.1\AutoComplete1.1\bin\Debug\AutoComplete1._1.pdb
+D:\local projects\Контур.Тестовое\AutoComplete1.1\AutoComplete1.1\obj\Debug\AutoComplete1._1.exe
+D:\local projects\Контур.Тестовое\AutoComplete1.1\AutoComplete1.1\obj\Debug\AutoComplete1._1.pdb
