@@ -11,39 +11,40 @@ namespace AutoComplete
     {
         public static void Main(string[] args)
         {
-            var fileName = "100000";
-            var sr = new StreamReader($"{fileName}.txt");
+            var sr = new StreamReader($"100000.txt");
             var autoCompleter = new AutoCompleter();
             var fullNameList = new List<FullName>();
             var sw = new Stopwatch();
-            var rand = new Random();
-            var namesCount = int.Parse(fileName);
-            Console.WriteLine("Creating full names list");
+            var namesCount = 100000;
+            
+            Console.WriteLine("Reading full names file");
             var str = sr.ReadToEnd().Split(new[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
             for (var i = 0; i < namesCount; i++)
             {
                 var currentStr = str[i].Split(' ');
-                var currentFN = new FullName
+                var currentFullName = new FullName
                 {
                     Surname = currentStr[0],
                     Name = currentStr[1],
                     Patronymic = currentStr[2]
                 };
-                fullNameList.Add(currentFN);
+                fullNameList.Add(currentFullName);
             }
-            //fullNameList = GetFullNamesList(50000);
-
-            Console.WriteLine($"List created for {sw.Elapsed}");
-            Console.WriteLine("Adding names");
+            Console.WriteLine($"File read for {sw.Elapsed}");
+            
+            Console.WriteLine("Adding names to base");
             sw.Restart();
             autoCompleter.AddToSearch(fullNameList);
-            Console.WriteLine($"Add to search time - {sw.Elapsed}");
-            var randomNames = GetRandomNames(fullNameList, 10);
-            foreach (var fullName in randomNames)
+            Console.WriteLine($"Adding to full names base time - {sw.Elapsed}");
+            
+            var randomNames = GetRandomCasesToSearch(fullNameList, 10);
+            
+            foreach (var searchCase in randomNames)
             {
                 sw.Restart();
-                var result = autoCompleter.Search(fullName);
-                Console.WriteLine($"{sw.ElapsedTicks} - {result.Count}");
+                var result = autoCompleter.Search(searchCase);
+                var elapsedTicks = sw.ElapsedTicks;
+                Console.WriteLine($"For case {searchCase} found {result.Count} results by {elapsedTicks} ticks");
             }
             Console.ReadLine();
         }
@@ -78,14 +79,15 @@ namespace AutoComplete
             return result;
         }
 
-        private static List<string> GetRandomNames(List<FullName> fullNames, int count)
+        private static List<string> GetRandomCasesToSearch(List<FullName> fullNames, int count)
         {
             var rand = new Random();
             var result = new List<string>();
             var length = fullNames.Count;
+            
             for (var i = 0; i < count; i++)
             {
-                result.Add(fullNames[rand.Next(length - 1)].ToString().Substring(0, 1));
+                result.Add(fullNames[rand.Next(length - 1)].ToString().Substring(0, rand.Next(10, 20)));
             }
 
             return result;
