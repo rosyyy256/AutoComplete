@@ -27,34 +27,35 @@ namespace AutoComplete
         {
             private class Node
             {
-                public bool IsValue { get; private set; }
-                public string Value { get; private set; }
+                private bool _isValue;
+                private string _value;
                 private readonly Dictionary<char, Node> _children;
 
                 public Node()
                 {
                     _children = new Dictionary<char, Node>();
-                    IsValue = false;
+                    _isValue = false;
                 }
 
                 public void SetValue(string value)
                 {
-                    IsValue = true;
-                    Value = value;
+                    _isValue = true;
+                    _value = value;
                 }
 
                 public bool Contains(char ch) => _children.ContainsKey(ch);
 
                 public Node GetChild(char ch) => _children[ch];
 
-                public List<Node> GetChildren() => _children.Values.ToList();
-
                 public void Add(char ch)
                 {
                     _children.Add(ch, new Node());
                 }
-
-                public static List<string> GetBelowValues(Node node)
+                
+                /// <summary>
+                /// Bypass in breadth to get all downstream values 
+                /// </summary>
+                public static List<string> GetDownstreamValues(Node node)
                 {
                     var result = new List<string>();
                     var queue = new Queue<Node>();
@@ -63,9 +64,9 @@ namespace AutoComplete
                     while (queue.Count > 0)
                     {
                         var currentNode = queue.Dequeue();
-                        if (currentNode.IsValue) result.Add(currentNode.Value);
+                        if (currentNode._isValue) result.Add(currentNode._value);
 
-                        foreach (var child in currentNode.GetChildren())
+                        foreach (var child in currentNode._children.Values)
                         {
                             queue.Enqueue(child);
                         }
@@ -75,13 +76,16 @@ namespace AutoComplete
                 }
             }
 
-            private Node _head;
+            private readonly Node _head;
 
             public Trie()
             {
                 _head = new Node();
             }
 
+            /// <summary>
+            /// Inserts the value at the correct location in the trie 
+            /// </summary>
             public void Insert(string value)
             {
                 var currentNode = _head;
@@ -107,7 +111,7 @@ namespace AutoComplete
                     currentNode = currentNode.GetChild(desiredStr[i]);
                 }
 
-                return Node.GetBelowValues(currentNode);
+                return Node.GetDownstreamValues(currentNode);
             }
         }
         
@@ -118,6 +122,9 @@ namespace AutoComplete
             _trie = new Trie();
         }
 
+        /// <summary>
+        /// Add person's full names list to abstract data base 
+        /// </summary>
         public void AddToSearch(List<FullName> fullNames)
         {
             foreach (var fullName in fullNames)
@@ -127,6 +134,10 @@ namespace AutoComplete
             }
         }
 
+        /// <summary>
+        /// Search all matching full names by prefix
+        /// </summary>
+        /// <returns>List of matching full names</returns>
         public List<string> Search(string prefix)
         {
             prefix = TrimPrefix(prefix);
